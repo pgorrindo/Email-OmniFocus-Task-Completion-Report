@@ -50,6 +50,8 @@ on do_OmniFocus()
 			set {lstName} to {name} of refDoneTasks
 			repeat with iTask from 1 to count of lstName
 				set {strName} to {item iTask of lstName}
+				set strName to my remove_quotes(strName)
+				
 				set theMessage to theMessage & "<li>" & strName
 				set theMessage to theMessage & "</li><br>"
 			end repeat
@@ -63,6 +65,17 @@ end do_OmniFocus
 on send_email(theMessage)
 	set theTimeStamp to (do shell script "date '+%Y%m%d %H:%M:%S'")
 	set theSubject to "OmniFocus Completed Task Report (" & theTimeStamp & ")"
-	do shell script "echo \"" & theMessage & "\" | mail -s \"$(echo \"" & theSubject & "\nContent-Type: text/html\")\" " & toAddress & " -f " & fromAddress
+	do shell script "echo " & quote & theMessage & quote & " | mail -s \"$(echo \"" & theSubject & "\nContent-Type: text/html\")\" " & toAddress & " -f " & fromAddress
+	
 end send_email
 
+
+on remove_quotes(strName)
+	set astid to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to quote
+	set strName to text items of strName
+	set AppleScript's text item delimiters to ""
+	set strName to strName as text
+	set AppleScript's text item delimiters to astid
+	return strName
+end remove_quotes
