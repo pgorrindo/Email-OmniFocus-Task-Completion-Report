@@ -1,10 +1,11 @@
 --==============================
 -- Script name: Email OmniFocus Task Completion Report
--- Version 1.0
+-- Version 1.1
 -- Written By: Phil Gorrindo <pgorrindo.github@gorrindo.com> and http://phil.gorrindo.com
 -- Description: This script retrieves a list of OmniFocus tasks completed yesterday or today. It then sends an email report.
 -- Version History:
 -- 		1.0 - Initial release
+--		1.1 - fixed errors on unescaped angle brackets and quotes, and removed context/project title code to speed up script
 -- Based on the following original scripts: 
 --		http://www.tuaw.com/2013/04/15/applescripting-omnifocus-send-completed-task-report-to-evernot/
 --		http://veritrope.com/code/write-todays-completed-tasks-in-omnifocus-to-a-text-file/
@@ -46,12 +47,10 @@ on do_OmniFocus()
 			set theMessage to theMessage & "<h3>Number of tasks completed: " & numberTasks & "</h3><br><hr>"
 			set theMessage to theMessage & "<ul>"
 			
-			set {lstName, lstContext, lstProject} to {name, name of its context, name of its containing project} of refDoneTasks
+			set {lstName} to {name} of refDoneTasks
 			repeat with iTask from 1 to count of lstName
-				set {strName, varContext, varProject} to {item iTask of lstName, item iTask of lstContext, item iTask of lstProject}
+				set {strName} to {item iTask of lstName}
 				set theMessage to theMessage & "<li>" & strName
-				--if varContext is not missing value then set strText to strText & " @" & varContext
-				--if varProject is not missing value then set strText to strText & " (" & varProject & ")"
 				set theMessage to theMessage & "</li><br>"
 			end repeat
 		end tell
